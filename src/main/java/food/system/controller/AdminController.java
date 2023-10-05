@@ -20,7 +20,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @PutMapping
-    public ResponseEntity<?> updateAdmin(@RequestBody @Valid AdminDto adminDto,
+    public ResponseEntity<?> updateAdmin(@ModelAttribute @Valid AdminDto adminDto,
                                          @RequestParam(required = false) MultipartFile file){
         return adminService.updateAdmin(adminDto, file);
     }

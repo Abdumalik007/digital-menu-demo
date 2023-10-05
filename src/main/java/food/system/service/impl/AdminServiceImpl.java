@@ -11,7 +11,6 @@ import food.system.repository.AdminRepository;
 import food.system.repository.ImageRepository;
 import food.system.role.Role;
 import food.system.service.main.AdminService;
-import food.system.util.ImageUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,11 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.Optional;
 
 import static food.system.helper.ResponseEntityHelper.INTERNAL_ERROR;
 import static food.system.helper.ResponseEntityHelper.NOT_FOUND;
+import static food.system.util.ImageUtil.buildImage;
 
 
 @RequiredArgsConstructor
@@ -47,12 +46,11 @@ public class AdminServiceImpl implements AdminService {
             Admin admin = Admin.builder()
                     .user(
                             User.builder()
-                                    .email("admin@gmail.com")
+                                    .username("admin")
                                     .password(encoder.encode("123456"))
                                     .role(Role.ADMIN).build()
                     )
-                    .firstName("Ism")
-                    .lastName("Familiya")
+                    .name("Falonchi")
                     .build();
             adminRepository.save(admin);
         }
@@ -66,18 +64,17 @@ public class AdminServiceImpl implements AdminService {
                 return NOT_FOUND();
 
             Admin admin = optional.get();
-            admin.setFirstName(adminDto.getFirstName());
-            admin.setLastName(adminDto.getLastName());
+            admin.setName(adminDto.getName());
 
             if(file != null)
                 updateAdminPhoto(admin, file);
             updateAdminUser(adminDto, admin);
 
             adminRepository.save(admin);
-
+            adminDto = adminMapper.toDto(admin);
             return ResponseEntity.ok(adminDto);
         }catch (Exception e){
-            logger.error("Error while updating a admin".concat(e.getMessage()));
+            logger.error("Error while updating an admin: ".concat(e.getMessage()));
             return INTERNAL_ERROR();
         }
     }
@@ -97,28 +94,21 @@ public class AdminServiceImpl implements AdminService {
     private void updateAdminUser(AdminDto adminDto, Admin admin){
         User user = admin.getUser();
         UserDto userDto = adminDto.getUser();
-        user.setEmail(adminDto.getUser().getEmail());
+        user.setUsername(adminDto.getUser().getUsername());
         if(userDto.getPassword() != null)
             user.setPassword(encoder.encode(userDto.getPassword()));
     }
 
 
     private void updateAdminPhoto(Admin admin, MultipartFile file) throws IOException {
-        Image oldImage = admin.getImage();
-        imageRepository.deleteById(oldImage.getId());
-        Files.delete(Path.of(oldImage.getPath()));
+        if(admin.getImage() != null) {
+            Image oldImage = admin.getImage();
+            imageRepository.deleteById(oldImage.getId());
+            Files.delete(Path.of("uploads/" + oldImage.getPath()));
+        }
         admin.setImage(buildImage(file));
     }
 
-
-    private Image buildImage(MultipartFile file) {
-        return Image.builder()
-                .name(file.getOriginalFilename())
-                .ext(Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[1])
-                .path(ImageUtil.uploadImage(file))
-                .build();
-
-    }
 
 }
 

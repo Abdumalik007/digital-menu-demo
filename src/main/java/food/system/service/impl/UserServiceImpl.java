@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<?> login(LoginRequest loginRequest, HttpServletRequest request) {
-        Optional<User> userOptional = userRepository.findUserByEmail(loginRequest.getEmail());
+        Optional<User> userOptional = userRepository.findUserByUsername(loginRequest.getUsername());
         if(userOptional.isEmpty())
             return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).build();
 

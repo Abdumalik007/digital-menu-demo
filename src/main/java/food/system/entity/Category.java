@@ -2,6 +2,10 @@ package food.system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -16,7 +20,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-
     @Column(unique = true)
     private String name;
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, orphanRemoval = true)
+    @Fetch(FetchMode.JOIN)
+    private List<Food> foods;
 }

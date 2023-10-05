@@ -14,10 +14,8 @@ import java.io.Serializable;
 public class AdminDto  implements Serializable {
     private Integer id;
     @NotBlank(message = "Firstname must not be blank")
-    private String firstName;
-    @NotBlank(message = "Lastname must not be blank")
-    private String lastName;
-    @NotNull(message = "Password and username are required!")
+    private String name;
+      @NotNull(message = "Password and username are required!")
     private UserDto user;
     private ImageDto image;
 }

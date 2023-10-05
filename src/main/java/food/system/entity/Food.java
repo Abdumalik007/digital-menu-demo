@@ -9,16 +9,20 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "admin")
-public class Admin {
+@Table
+public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
+    @Column(unique = true)
     private String name;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
     private Image image;
+    private String time;
+    private String composition;
+    @ManyToOne
+    private Category category;
+    private Integer price;
+    private Boolean status;
 }

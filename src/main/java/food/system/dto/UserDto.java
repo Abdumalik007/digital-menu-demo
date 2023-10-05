@@ -17,8 +17,8 @@ import java.io.Serializable;
 @JsonIgnoreProperties(value = {"password", "role", "id"}, allowSetters = true)
 public class UserDto implements Serializable {
     private Integer id;
-    @NotBlank(message = "Email must not be empty")
-    private String email;
+    @NotBlank(message = "Username must not be empty")
+    private String username;
 
     @Size(min = 6, message = "Password must contain at least 6 characters")
     @NotBlank(message = "Password must not be empty")

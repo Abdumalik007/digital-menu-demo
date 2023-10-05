@@ -1,5 +1,6 @@
 package food.system.util;
 
+import food.system.entity.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -29,5 +30,14 @@ public class ImageUtil {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Image buildImage(MultipartFile file) {
+        return Image.builder()
+                .name(file.getOriginalFilename())
+                .ext(Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[1])
+                .path(ImageUtil.uploadImage(file))
+                .build();
+
     }
 }

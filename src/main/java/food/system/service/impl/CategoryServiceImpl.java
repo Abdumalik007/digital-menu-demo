@@ -37,7 +37,10 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             if(categoryRepository.existsByName(categoryDto.getName()))
                 return INTERNAL_ERROR();
-            Category category = new Category(categoryDto.getId(), categoryDto.getName());
+            Category category = Category.builder()
+                                .id(categoryDto.getId())
+                                .name(categoryDto.getName())
+                                .build();
             categoryRepository.save(category);
             return OK_MESSAGE();
         }catch (Exception e) {
@@ -50,7 +53,10 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> categoryOptional = categoryRepository.findById(id);
         if(categoryOptional.isEmpty())
             return NOT_FOUND();
-        CategoryDto categoryDto = new CategoryDto(categoryOptional.get().getId(), categoryOptional.get().getName());
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id(categoryOptional.get().getId())
+                .name(categoryOptional.get().getName())
+                .build();
         return ResponseEntity.ok(categoryDto);
     }
 
@@ -68,16 +74,22 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<?> search(String name) {
         List<CategoryDto> categoryDtoList =
                 categoryRepository.findAllByNameContainsIgnoreCase(name).stream()
-                        .map(c -> new CategoryDto(c.getId(), c.getName())).toList();
+                        .map(c -> CategoryDto.builder()
+                                .id(c.getId())
+                                .name(c.getName())
+                                .build())
+                        .toList();
         return ResponseEntity.ok(categoryDtoList);
     }
-
 
     @Override
     public ResponseEntity<?> getAllCategories() {
         List<CategoryDto> categoryDtoList =
                 categoryRepository.findAll().stream()
-                        .map(c -> new CategoryDto(c.getId(), c.getName())).toList();
+                        .map(c -> CategoryDto.builder()
+                                .id(c.getId())
+                                .name(c.getName())
+                                .build()).toList();
         return ResponseEntity.ok(categoryDtoList);
     }
 
