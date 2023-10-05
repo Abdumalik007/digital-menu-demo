@@ -13,6 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/food")
 @RequiredArgsConstructor
 public class FoodController {
+    @PatchMapping("/food-status")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> changeStatus(@RequestParam(required = false) Integer id,
+                                          @RequestParam(required = false) boolean status) {
+        System.out.println(id + "  " + status);
+        return foodService.changeStatus(id, status);
+    }
 
     private final FoodService foodService;
 
@@ -49,7 +56,7 @@ public class FoodController {
 
     @GetMapping("/get-all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getAllCategories() {
+    public ResponseEntity<?> getAllFoods() {
         return foodService.getAllFoods();
     }
 
@@ -60,10 +67,5 @@ public class FoodController {
         return foodService.findFoodByCategoryId(id);
     }
 
-    @PutMapping("/status/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> changeStatus(@PathVariable Integer id, @RequestParam Boolean status) {
-        return foodService.changeStatus(id, status);
-    }
 
 }

@@ -17,7 +17,7 @@ public class Food {
     private Integer id;
     @Column(unique = true)
     private String name;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
     private String time;
     private String composition;

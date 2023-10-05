@@ -5,6 +5,8 @@ import food.system.entity.Category;
 import food.system.repository.CategoryRepository;
 import food.system.service.main.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import static food.system.helper.ResponseEntityHelper.*;
 @RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
+    public static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
     private final CategoryRepository categoryRepository;
 
 
@@ -28,6 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.save(category);
             return OK_MESSAGE();
         }catch (Exception e) {
+            logger.error("Error while creating category: ".concat(e.getMessage()));
             return INTERNAL_ERROR();
         }
     }
@@ -35,7 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> updateCategory(CategoryDto categoryDto) {
         try {
-            if(categoryRepository.existsByName(categoryDto.getName()))
+            if(categoryRepository.existsByNameAndIdIsNot(categoryDto.getName(), categoryDto.getId()))
                 return INTERNAL_ERROR();
             Category category = Category.builder()
                                 .id(categoryDto.getId())
@@ -44,6 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.save(category);
             return OK_MESSAGE();
         }catch (Exception e) {
+            logger.error("Error while updating category: ".concat(e.getMessage()));
             return INTERNAL_ERROR();
         }
     }
@@ -66,6 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.deleteById(id);
             return OK_MESSAGE();
         }catch (Exception e) {
+            logger.error("Error while deleting category: ".concat(e.getMessage()));
             return INTERNAL_ERROR();
         }
     }
