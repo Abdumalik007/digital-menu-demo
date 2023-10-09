@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface CategoryService {
     ResponseEntity<?> createCategory(String name);
-    ResponseEntity<?> updateCategory(CategoryDto categoryDto);
+    ResponseEntity<?> updateCategory(String name, Integer id);
     ResponseEntity<?> findCategoryById(Integer id);
     ResponseEntity<?> deleteCategoryById(Integer id);
     ResponseEntity<?> search(String name);
-    ResponseEntity<?> getAllCategories();
+    ResponseEntity<?> getAllCategories(boolean withFood);
 }

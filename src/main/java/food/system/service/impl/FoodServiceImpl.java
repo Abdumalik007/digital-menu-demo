@@ -49,7 +49,7 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public ResponseEntity<?> updateFood(FoodDto foodDto, MultipartFile file) {
+    public Object updateFood(FoodDto foodDto, MultipartFile file) {
         try {
             if(foodRepository.existsByNameAndIdIsNot(foodDto.getName(), foodDto.getId()))
                 return INTERNAL_ERROR();

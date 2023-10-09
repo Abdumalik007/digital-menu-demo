@@ -18,11 +18,11 @@ public interface FoodMapper {
     FoodDto toDto(Food food);
 
     default Category categoryDtoToEntity(CategoryDto dto) {
-        return Category.builder().id(dto.getId()).build();
+        return Category.builder().id(dto.getId()).name(dto.getName()).build();
     }
 
     default CategoryDto categoryEntityToDto(Category entity) {
-        return CategoryDto.builder().id(entity.getId()).build();
+        return CategoryDto.builder().id(entity.getId()).name(entity.getName()).build();
     }
 
 }

@@ -1,10 +1,10 @@
 package food.system.controller;
 
 
-import food.system.dto.CategoryDto;
 import food.system.service.main.CategoryService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/category")
+@CacheConfig(cacheNames = "Category")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -23,8 +24,8 @@ public class CategoryController {
 
     @PutMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
-        return categoryService.updateCategory(categoryDto);
+    public ResponseEntity<?> updateCategory(@RequestParam String name, @RequestParam Integer id) {
+        return categoryService.updateCategory(name, id);
     }
 
     @GetMapping("/{id}")
@@ -48,8 +49,9 @@ public class CategoryController {
 
     @GetMapping("/get-all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getAllCategories() {
-        return categoryService.getAllCategories();
+    @Cacheable(value = "categoryCache", key = "'allCategories'", unless = "#withFood == false")
+    public ResponseEntity<?> getAllCategories(@RequestParam boolean withFood) {
+        return categoryService.getAllCategories(withFood);
     }
 
 }

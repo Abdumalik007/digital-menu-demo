@@ -2,14 +2,21 @@ package food.system.service.impl;
 
 import food.system.dto.CategoryDto;
 import food.system.entity.Category;
+import food.system.entity.Food;
+import food.system.entity.Image;
+import food.system.mapper.FoodMapper;
 import food.system.repository.CategoryRepository;
+import food.system.repository.FoodRepository;
 import food.system.service.main.CategoryService;
+import food.system.service.main.FoodService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +27,8 @@ import static food.system.helper.ResponseEntityHelper.*;
 public class CategoryServiceImpl implements CategoryService {
     public static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
     private final CategoryRepository categoryRepository;
+    private final FoodRepository foodRepository;
+    private final FoodMapper foodMapper;
 
 
     @Override
@@ -37,21 +46,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<?> updateCategory(CategoryDto categoryDto) {
+    public ResponseEntity<?> updateCategory(String name, Integer id) {
         try {
-            if(categoryRepository.existsByNameAndIdIsNot(categoryDto.getName(), categoryDto.getId()))
+            if(categoryRepository.existsByNameAndIdIsNot(name, id))
                 return INTERNAL_ERROR();
-            Category category = Category.builder()
-                                .id(categoryDto.getId())
-                                .name(categoryDto.getName())
-                                .build();
+            Category category = categoryRepository.findById(id).orElseThrow();
+            category.setName(name);
             categoryRepository.save(category);
-            return OK_MESSAGE();
+            CategoryDto dto = CategoryDto.builder().id(id).name(name).build();
+            return ResponseEntity.ok(dto);
         }catch (Exception e) {
             logger.error("Error while updating category: ".concat(e.getMessage()));
-            return INTERNAL_ERROR();
+            throw new RuntimeException();
         }
     }
+
 
     @Override
     public ResponseEntity<?> findCategoryById(Integer id) {
@@ -68,13 +77,20 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> deleteCategoryById(Integer id) {
         try {
+            List<Food> foods = foodRepository.findAllByCategoryId(id);
             categoryRepository.deleteById(id);
+            for (Food food : foods) {
+                Image image = food.getImage();
+                foodRepository.deleteById(food.getId());
+                Files.delete(Path.of("uploads/" + image.getPath()));
+            }
             return OK_MESSAGE();
         }catch (Exception e) {
             logger.error("Error while deleting category: ".concat(e.getMessage()));
             return INTERNAL_ERROR();
         }
     }
+
 
     @Override
     public ResponseEntity<?> search(String name) {
@@ -89,13 +105,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<?> getAllCategories() {
+    public ResponseEntity<?> getAllCategories(boolean withFood) {
         List<CategoryDto> categoryDtoList =
                 categoryRepository.findAll().stream()
                         .map(c -> CategoryDto.builder()
                                 .id(c.getId())
                                 .name(c.getName())
-                                .build()).toList();
+                                .foods(
+                                        (withFood) ?
+                                                c.getFoods().stream().map(foodMapper::toDto).toList()
+                                                : null
+                                ).build())
+                        .toList();
         return ResponseEntity.ok(categoryDtoList);
     }
 

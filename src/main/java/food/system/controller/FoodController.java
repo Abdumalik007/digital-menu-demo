@@ -4,6 +4,9 @@ import food.system.dto.FoodDto;
 import food.system.service.main.FoodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,15 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/food")
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "Food")
 public class FoodController {
-    @PatchMapping("/food-status")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> changeStatus(@RequestParam(required = false) Integer id,
-                                          @RequestParam(required = false) boolean status) {
-        System.out.println(id + "  " + status);
-        return foodService.changeStatus(id, status);
-    }
-
     private final FoodService foodService;
 
     @PostMapping
@@ -31,7 +27,9 @@ public class FoodController {
 
     @PutMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateFood(@ModelAttribute @Valid FoodDto foodDto, @RequestParam(required = false) MultipartFile file) {
+    public Object updateFood(@ModelAttribute @Valid FoodDto foodDto,
+                                        @RequestParam Integer id,
+                                        @RequestParam(required = false) MultipartFile file) {
         return foodService.updateFood(foodDto, file);
     }
 
@@ -56,6 +54,7 @@ public class FoodController {
 
     @GetMapping("/get-all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Cacheable(key = "'allFoods'")
     public ResponseEntity<?> getAllFoods() {
         return foodService.getAllFoods();
     }
@@ -67,5 +66,11 @@ public class FoodController {
         return foodService.findFoodByCategoryId(id);
     }
 
+    @PutMapping("/food-status")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> changeStatus(@RequestParam Integer id,
+                                          @RequestParam boolean status) {
+        return foodService.changeStatus(id, status);
+    }
 
 }
