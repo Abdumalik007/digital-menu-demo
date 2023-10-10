@@ -28,7 +28,6 @@ public class FoodController {
     @PutMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Object updateFood(@ModelAttribute @Valid FoodDto foodDto,
-                                        @RequestParam Integer id,
                                         @RequestParam(required = false) MultipartFile file) {
         return foodService.updateFood(foodDto, file);
     }
