@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface ReviewService {
-    ResponseEntity<?> createReview(ReviewDto reviewDto);
-    ResponseEntity<?> findAllReviews();
+    ResponseEntity<ReviewDto> createReview(ReviewDto reviewDto);
+    ResponseEntity<List<ReviewDto>> findAllReviews();
     ResponseEntity<?> deleteReviews(List<Integer> reviewsId);
-    ResponseEntity<?> findReviewById(Integer id);
+    ResponseEntity<ReviewDto> findReviewById(Integer id);
 }

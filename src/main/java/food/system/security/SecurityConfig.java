@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/images/**").permitAll()
+                                .requestMatchers("/images/**", "category/get-all").permitAll()
                                 .requestMatchers(HttpMethod.POST,
                                         "/review/**",
                                         "/auth/login")

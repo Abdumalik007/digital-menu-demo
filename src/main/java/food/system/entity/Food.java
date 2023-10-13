@@ -3,6 +3,8 @@ package food.system.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -23,6 +25,7 @@ public class Food {
     private String composition;
     @ManyToOne
     private Category category;
-    private Integer price;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Portion> portions;
     private Boolean status;
 }

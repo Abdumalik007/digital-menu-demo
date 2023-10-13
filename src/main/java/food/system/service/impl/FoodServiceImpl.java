@@ -1,9 +1,11 @@
 package food.system.service.impl;
 
 import food.system.dto.FoodDto;
+import food.system.dto.PortionDto;
 import food.system.entity.Category;
 import food.system.entity.Food;
 import food.system.entity.Image;
+import food.system.entity.Portion;
 import food.system.mapper.FoodMapper;
 import food.system.repository.FoodRepository;
 import food.system.repository.ImageRepository;
@@ -33,34 +35,43 @@ public class FoodServiceImpl implements FoodService {
     private final ImageRepository imageRepository;
 
     @Override
-    public ResponseEntity<?> createFood(FoodDto foodDto, MultipartFile file) {
+    public ResponseEntity<FoodDto> createFood(FoodDto foodDto, MultipartFile file) {
         try {
             if(foodRepository.existsByName(foodDto.getName()))
-                return INTERNAL_ERROR();
+                return INTERNAL_ERROR(null);
+
+            System.out.println(foodDto);
             Food food = foodMapper.toEntity(foodDto);
             food.setStatus(true);
             food.setImage(buildImage(file));
+            food.getPortions().forEach(p -> p.setFood(food));
             foodRepository.save(food);
-            return OK_MESSAGE();
+            foodDto.setId(food.getId());
+
+            return OK_MESSAGE(foodDto);
         }catch (Exception e) {
             logger.error("Error while creating food: ".concat(e.getMessage()));
-            return INTERNAL_ERROR();
+            return INTERNAL_ERROR(null);
         }
     }
 
     @Override
-    public Object updateFood(FoodDto foodDto, MultipartFile file) {
+    public ResponseEntity<FoodDto> updateFood(FoodDto foodDto, MultipartFile file) {
         try {
             if(foodRepository.existsByNameAndIdIsNot(foodDto.getName(), foodDto.getId()))
-                return INTERNAL_ERROR();
+                return INTERNAL_ERROR(null);
+
             Food food = foodRepository.findById(foodDto.getId()).orElseThrow();
             updateFoodProperties(food, foodDto);
-            if(file != null) updateFoodImage(food, file);
+            if(file != null)
+                updateFoodImage(food, file);
+
             foodRepository.save(food);
-            return OK_MESSAGE();
+
+            return OK_MESSAGE(foodDto);
         }catch (Exception e) {
             logger.error("Error while updating food: ".concat(e.getMessage()));
-            return INTERNAL_ERROR();
+            return INTERNAL_ERROR(null);
         }
     }
 
@@ -68,12 +79,11 @@ public class FoodServiceImpl implements FoodService {
 
 
     @Override
-    public ResponseEntity<?> findFoodById(Integer id) {
-        Optional<Food> optional = foodRepository.findById(id);
-        if(optional.isEmpty()) return NOT_FOUND();
-        FoodDto dto = foodMapper.toDto(optional.get());
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<FoodDto> findFoodById(Integer id) {
+        return foodRepository.findById(id).map(f -> ResponseEntity.ok(foodMapper.toDto(f)))
+                .orElseGet(() -> NOT_FOUND(null));
     }
+
 
     @Override
     public ResponseEntity<?> deleteFoodById(Integer id) {
@@ -82,38 +92,39 @@ public class FoodServiceImpl implements FoodService {
             Image image = food.getImage();
             foodRepository.deleteById(id);
             Files.delete(Path.of("uploads/" + image.getPath()));
-            return OK_MESSAGE();
+            return OK_MESSAGE("Ok");
         }catch (Exception e) {
             logger.error("Error while deleting food: ".concat(e.getMessage()));
-            return INTERNAL_ERROR();
+            return INTERNAL_ERROR(null);
         }
     }
 
     @Override
-    public ResponseEntity<?> findFoodByCategoryId(Integer id) {
+    public ResponseEntity<List<FoodDto>> findFoodByCategoryId(Integer id) {
         List<FoodDto> foods = foodRepository.findAllByCategoryId(id).stream()
                 .map(foodMapper::toDto).toList();
         return ResponseEntity.ok(foods);
     }
 
+
     @Override
-    public ResponseEntity<?> search(String name) {
+    public ResponseEntity<List<FoodDto>> search(String name) {
         List<FoodDto> foods = foodRepository.findAllByNameContainsIgnoreCase(name).stream()
                 .map(foodMapper::toDto).toList();
         return ResponseEntity.ok(foods);
     }
 
     @Override
-    public ResponseEntity<?> getAllFoods() {
+    public ResponseEntity<List<FoodDto>> getAllFoods() {
         List<FoodDto> foods = foodRepository.findAll().stream()
                 .map(foodMapper::toDto).toList();
         return ResponseEntity.ok(foods);
     }
 
     @Override
-    public ResponseEntity<?> changeStatus(Integer id, Boolean status) {
+    public ResponseEntity<FoodDto> changeStatus(Integer id, Boolean status) {
         Optional<Food> optional = foodRepository.findById(id);
-        if(optional.isEmpty()) return NOT_FOUND();
+        if(optional.isEmpty()) return NOT_FOUND(null);
 
         Food food = optional.get();
         food.setStatus(status);
@@ -123,16 +134,32 @@ public class FoodServiceImpl implements FoodService {
         return ResponseEntity.ok(dto);
     }
 
+
     private void updateFoodProperties(Food food, FoodDto foodDto) {
         food.setName(foodDto.getName());
         food.setTime(foodDto.getTime());
         food.setComposition(foodDto.getComposition());
-        food.setPrice(foodDto.getPrice());
+        updatePortions(food.getPortions(), foodDto.getPortions(), food);
         food.setCategory(Category.builder().id(foodDto.getCategory().getId()).build());
+    }
+
+    private void updatePortions(List<Portion> oldPortions, List<PortionDto> newPortions, Food food) {
+        oldPortions.clear();
+        for (PortionDto portionDto : newPortions) {
+            if (portionDto == null) break;
+            Portion updated = updateEachPortion(portionDto, food);
+            oldPortions.add(updated);
+        }
+    }
+
+    private Portion updateEachPortion(PortionDto newPortion, Food food) {
+        return Portion.builder().id(newPortion.getId()).unit(newPortion.getUnit())
+                .price(newPortion.getPrice()).food(food).build();
     }
 
     private void updateFoodImage(Food food, MultipartFile file) throws IOException {
         Image image = food.getImage();
+        System.out.println(image);
         imageRepository.deleteById(image.getId());
         Files.delete(Path.of("uploads/" + image.getPath()));
         food.setImage(buildImage(file));

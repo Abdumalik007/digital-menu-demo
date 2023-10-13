@@ -1,8 +1,12 @@
 package food.system.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -10,6 +14,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@JsonIgnoreProperties(value = {"category.name", "category.foods"})
+@ToString
 public class FoodDto {
     private Integer id;
     @NotBlank(message = "Name must not be blank")
@@ -19,7 +25,7 @@ public class FoodDto {
     @NotNull(message = "Category must not be null")
     private CategoryDto category;
     private String composition;
-    @NotNull(message = "Price must not be null")
-    private Integer price;
+    @NotEmpty
+    private List<PortionDto> portions;
     private Boolean status;
 }

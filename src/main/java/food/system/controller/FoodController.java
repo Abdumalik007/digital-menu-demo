@@ -21,7 +21,8 @@ public class FoodController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> createFood(@ModelAttribute @Valid FoodDto foodDto, @RequestParam MultipartFile file) {
+    public ResponseEntity<?> createFood(@ModelAttribute @Valid FoodDto foodDto,
+                                        @RequestParam MultipartFile file) {
         return foodService.createFood(foodDto, file);
     }
 

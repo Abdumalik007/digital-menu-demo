@@ -57,11 +57,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ResponseEntity<?> updateAdmin(AdminDto adminDto, MultipartFile file) {
+    public ResponseEntity<AdminDto> updateAdmin(AdminDto adminDto, MultipartFile file) {
         try {
             Optional<Admin> optional = adminRepository.findById(adminDto.getId());
             if(optional.isEmpty())
-                return NOT_FOUND();
+                return NOT_FOUND(null);
 
             Admin admin = optional.get();
             admin.setName(adminDto.getName());
@@ -75,7 +75,7 @@ public class AdminServiceImpl implements AdminService {
             return ResponseEntity.ok(adminDto);
         }catch (Exception e){
             logger.error("Error while updating an admin: ".concat(e.getMessage()));
-            return INTERNAL_ERROR();
+            return INTERNAL_ERROR(null);
         }
     }
 
@@ -83,10 +83,10 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public ResponseEntity<?> findAdminById(Integer id) {
+    public ResponseEntity<AdminDto> findAdminById(Integer id) {
         Optional<Admin> optional = adminRepository.findById(id);
-        if(optional.isPresent()) return ResponseEntity.ok(adminMapper.toDto(optional.get()));
-        return NOT_FOUND();
+        return optional.map(admin -> ResponseEntity.ok(adminMapper.toDto(admin)))
+                .orElseGet(() -> NOT_FOUND(null));
     }
 
 

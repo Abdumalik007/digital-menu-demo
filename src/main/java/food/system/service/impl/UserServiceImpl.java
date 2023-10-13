@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ResponseEntity<?> login(LoginRequest loginRequest, HttpServletRequest request) {
+    public ResponseEntity<LoginResponse> login(LoginRequest loginRequest, HttpServletRequest request) {
         Optional<User> userOptional = userRepository.findUserByUsername(loginRequest.getUsername());
         if(userOptional.isEmpty())
             return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).build();
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
             redisRepository.save(userSession);
         }catch (Exception e){
             logger.error("Error while logging in: ".concat(e.getMessage()));
-            return INTERNAL_ERROR();
+            return INTERNAL_ERROR(null);
         }
         String jwtToken = jwtService.generateToken(uuid);
 

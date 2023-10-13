@@ -3,11 +3,13 @@ package food.system.service.main;
 import food.system.dto.CategoryDto;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface CategoryService {
-    ResponseEntity<?> createCategory(String name);
-    ResponseEntity<?> updateCategory(String name, Integer id);
-    ResponseEntity<?> findCategoryById(Integer id);
+    ResponseEntity<CategoryDto> createCategory(String name);
+    ResponseEntity<CategoryDto> updateCategory(String name, Integer id);
+    ResponseEntity<CategoryDto> findCategoryById(Integer id);
     ResponseEntity<?> deleteCategoryById(Integer id);
-    ResponseEntity<?> search(String name);
-    ResponseEntity<?> getAllCategories(boolean withFood);
+    ResponseEntity<List<CategoryDto>> search(String name);
+    ResponseEntity<List<CategoryDto>> getAllCategories(boolean withFood);
 }

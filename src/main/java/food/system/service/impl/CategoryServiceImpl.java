@@ -32,24 +32,26 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public ResponseEntity<?> createCategory(String name) {
+    public ResponseEntity<CategoryDto> createCategory(String name) {
         try {
             if(categoryRepository.existsByName(name))
-                return INTERNAL_ERROR();
+                return INTERNAL_ERROR(null);
             Category category = Category.builder().name(name).build();
             categoryRepository.save(category);
-            return OK_MESSAGE();
+            CategoryDto categoryDto = CategoryDto.builder()
+                    .id(category.getId()).name(category.getName()).build();
+            return OK_MESSAGE(categoryDto);
         }catch (Exception e) {
             logger.error("Error while creating category: ".concat(e.getMessage()));
-            return INTERNAL_ERROR();
+            return INTERNAL_ERROR(null);
         }
     }
 
     @Override
-    public ResponseEntity<?> updateCategory(String name, Integer id) {
+    public ResponseEntity<CategoryDto> updateCategory(String name, Integer id) {
         try {
             if(categoryRepository.existsByNameAndIdIsNot(name, id))
-                return INTERNAL_ERROR();
+                return INTERNAL_ERROR(null);
             Category category = categoryRepository.findById(id).orElseThrow();
             category.setName(name);
             categoryRepository.save(category);
@@ -57,16 +59,16 @@ public class CategoryServiceImpl implements CategoryService {
             return ResponseEntity.ok(dto);
         }catch (Exception e) {
             logger.error("Error while updating category: ".concat(e.getMessage()));
-            throw new RuntimeException();
+            return INTERNAL_ERROR(null);
         }
     }
 
 
     @Override
-    public ResponseEntity<?> findCategoryById(Integer id) {
+    public ResponseEntity<CategoryDto> findCategoryById(Integer id) {
         Optional<Category> categoryOptional = categoryRepository.findById(id);
         if(categoryOptional.isEmpty())
-            return NOT_FOUND();
+            return NOT_FOUND(null);
         CategoryDto categoryDto = CategoryDto.builder()
                 .id(categoryOptional.get().getId())
                 .name(categoryOptional.get().getName())
@@ -84,16 +86,16 @@ public class CategoryServiceImpl implements CategoryService {
                 foodRepository.deleteById(food.getId());
                 Files.delete(Path.of("uploads/" + image.getPath()));
             }
-            return OK_MESSAGE();
+            return OK_MESSAGE("OK");
         }catch (Exception e) {
             logger.error("Error while deleting category: ".concat(e.getMessage()));
-            return INTERNAL_ERROR();
+            return INTERNAL_ERROR(null);
         }
     }
 
 
     @Override
-    public ResponseEntity<?> search(String name) {
+    public ResponseEntity<List<CategoryDto>> search(String name) {
         List<CategoryDto> categoryDtoList =
                 categoryRepository.findAllByNameContainsIgnoreCase(name).stream()
                         .map(c -> CategoryDto.builder()
@@ -105,7 +107,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<?> getAllCategories(boolean withFood) {
+    public ResponseEntity<List<CategoryDto>> getAllCategories(boolean withFood) {
         List<CategoryDto> categoryDtoList =
                 categoryRepository.findAll().stream()
                         .map(c -> CategoryDto.builder()

@@ -4,16 +4,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 
 public class ResponseEntityHelper {
-    public static ResponseEntity<?> NOT_FOUND(){
-        return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).build();
+    public static <T> ResponseEntity<T> NOT_FOUND(T data){
+        return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(data);
     }
 
-    public static ResponseEntity<?> INTERNAL_ERROR(){
-        return ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).build();
+    public static <T> ResponseEntity<T> INTERNAL_ERROR(T data){
+        return ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).body(data);
     }
 
-    public static ResponseEntity<?> OK_MESSAGE(){
-        return ResponseEntity.ok("Ok");
+    public static <T> ResponseEntity<T> OK_MESSAGE(T data){
+        return ResponseEntity.ok(data);
     }
 
 }

@@ -19,4 +19,3 @@ public class UserSession {
 
     private User value;
 }
-

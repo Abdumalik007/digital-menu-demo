@@ -31,7 +31,7 @@ public class ReviewController {
 
 
     @DeleteMapping
-    public ResponseEntity<?> findReviewById(@RequestBody List<Integer> ids) {
+    public ResponseEntity<?> deleteReviewById(@RequestParam List<Integer> ids) {
         return reviewService.deleteReviews(ids);
     }
 

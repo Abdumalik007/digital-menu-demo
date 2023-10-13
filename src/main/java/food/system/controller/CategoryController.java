@@ -2,12 +2,15 @@ package food.system.controller;
 
 
 import food.system.service.main.CategoryService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
 
 @RequiredArgsConstructor
 @RestController
@@ -48,7 +51,6 @@ public class CategoryController {
     }
 
     @GetMapping("/get-all")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Cacheable(value = "categoryCache", key = "'allCategories'", unless = "#withFood == false")
     public ResponseEntity<?> getAllCategories(@RequestParam boolean withFood) {
         return categoryService.getAllCategories(withFood);

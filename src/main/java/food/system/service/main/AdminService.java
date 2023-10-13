@@ -5,6 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface AdminService {
-    ResponseEntity<?> updateAdmin(AdminDto adminDto, MultipartFile file);
-    ResponseEntity<?> findAdminById(Integer id);
+    ResponseEntity<AdminDto> updateAdmin(AdminDto adminDto, MultipartFile file);
+    ResponseEntity<AdminDto> findAdminById(Integer id);
 }

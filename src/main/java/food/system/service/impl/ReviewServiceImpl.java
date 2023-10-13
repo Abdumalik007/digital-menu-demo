@@ -26,20 +26,20 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewMapper reviewMapper;
 
     @Override
-    public ResponseEntity<?> createReview(ReviewDto reviewDto) {
+    public ResponseEntity<ReviewDto> createReview(ReviewDto reviewDto) {
         try {
             Review review = reviewMapper.toEntity(reviewDto);
             review.setCreatedAt(LocalDate.now());
             reviewRepository.save(review);
-            return OK_MESSAGE();
+            return OK_MESSAGE(reviewDto);
         }catch (Exception e) {
             logger.error("Error while creating review: ".concat(e.getMessage()));
-            return INTERNAL_ERROR();
+            return INTERNAL_ERROR(null);
         }
     }
 
     @Override
-    public ResponseEntity<?> findAllReviews() {
+    public ResponseEntity<List<ReviewDto>> findAllReviews() {
         List<ReviewDto> reviews = reviewRepository.findAll().stream()
                 .map(reviewMapper::toDto).toList();
         return ResponseEntity.ok(reviews);
@@ -49,17 +49,17 @@ public class ReviewServiceImpl implements ReviewService {
     public ResponseEntity<?> deleteReviews(List<Integer> reviewsId) {
         try {
             reviewRepository.deleteAllById(reviewsId);
-            return OK_MESSAGE();
+            return OK_MESSAGE("Ok");
         }catch (Exception e) {
             logger.error("Error while deleting review: ".concat(e.getMessage()));
-            return INTERNAL_ERROR();
+            return INTERNAL_ERROR(null);
         }
     }
 
     @Override
-    public ResponseEntity<?> findReviewById(Integer id) {
+    public ResponseEntity<ReviewDto> findReviewById(Integer id) {
         Review review = reviewRepository.findById(id).orElseThrow();
-        return ResponseEntity.ok(review);
+        return ResponseEntity.ok(reviewMapper.toDto(review));
     }
 
 

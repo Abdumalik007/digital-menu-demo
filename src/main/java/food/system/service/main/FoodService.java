@@ -4,13 +4,15 @@ import food.system.dto.FoodDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface FoodService {
-    ResponseEntity<?> createFood(FoodDto foodDto, MultipartFile file);
-    Object updateFood(FoodDto categoryDto, MultipartFile file);
-    ResponseEntity<?> findFoodById(Integer id);
+    ResponseEntity<FoodDto> createFood(FoodDto foodDto, MultipartFile file);
+    ResponseEntity<FoodDto> updateFood(FoodDto categoryDto, MultipartFile file);
+    ResponseEntity<FoodDto> findFoodById(Integer id);
     ResponseEntity<?> deleteFoodById(Integer id);
-    ResponseEntity<?> findFoodByCategoryId(Integer id);
-    ResponseEntity<?> search(String name);
-    ResponseEntity<?> getAllFoods();
-    ResponseEntity<?> changeStatus(Integer id, Boolean status);
+    ResponseEntity<List<FoodDto>> findFoodByCategoryId(Integer id);
+    ResponseEntity<List<FoodDto>> search(String name);
+    ResponseEntity<List<FoodDto>> getAllFoods();
+    ResponseEntity<FoodDto> changeStatus(Integer id, Boolean status);
 }
