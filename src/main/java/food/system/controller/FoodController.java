@@ -5,7 +5,6 @@ import food.system.service.main.FoodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,7 +52,7 @@ public class FoodController {
     }
 
     @GetMapping("/get-all")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_WAITER')")
     @Cacheable(key = "'allFoods'")
     public ResponseEntity<?> getAllFoods() {
         return foodService.getAllFoods();
@@ -67,7 +66,7 @@ public class FoodController {
     }
 
     @PutMapping("/food-status")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_WAITER')")
     public ResponseEntity<?> changeStatus(@RequestParam Integer id,
                                           @RequestParam boolean status) {
         return foodService.changeStatus(id, status);

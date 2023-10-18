@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -37,9 +38,11 @@ public class CategoryServiceImpl implements CategoryService {
             if(categoryRepository.existsByName(name))
                 return INTERNAL_ERROR(null);
             Category category = Category.builder().name(name).build();
-            categoryRepository.save(category);
+            category = categoryRepository.save(category);
+
             CategoryDto categoryDto = CategoryDto.builder()
                     .id(category.getId()).name(category.getName()).build();
+
             return OK_MESSAGE(categoryDto);
         }catch (Exception e) {
             logger.error("Error while creating category: ".concat(e.getMessage()));
@@ -55,6 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
             Category category = categoryRepository.findById(id).orElseThrow();
             category.setName(name);
             categoryRepository.save(category);
+
             CategoryDto dto = CategoryDto.builder().id(id).name(name).build();
             return ResponseEntity.ok(dto);
         }catch (Exception e) {
@@ -76,10 +80,11 @@ public class CategoryServiceImpl implements CategoryService {
         return ResponseEntity.ok(categoryDto);
     }
 
+
     @Override
     public ResponseEntity<?> deleteCategoryById(Integer id) {
         try {
-            List<Food> foods = foodRepository.findAllByCategoryId(id);
+            List<Food> foods = foodRepository.findAllByCategoryIdOrderById(id);
             categoryRepository.deleteById(id);
             for (Food food : foods) {
                 Image image = food.getImage();

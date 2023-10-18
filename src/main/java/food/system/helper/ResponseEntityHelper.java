@@ -8,6 +8,10 @@ public class ResponseEntityHelper {
         return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(data);
     }
 
+    public static ResponseEntity<String> BAD_REQUEST(String message){
+        return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body(message);
+    }
+
     public static <T> ResponseEntity<T> INTERNAL_ERROR(T data){
         return ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).body(data);
     }

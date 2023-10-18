@@ -37,6 +37,17 @@ public interface FoodMapper {
                 ).collect(Collectors.toList()) : null;
     }
 
+    default List<Portion> portionDtoToEntity(List<PortionDto> portions) {
+        return portions != null ?
+                portions.stream().map(p ->
+                        Portion.builder().
+                                id(p.getId()).
+                                unit(p.getUnit()).
+                                price(p.getPrice())
+                                .build()
+                ).collect(Collectors.toList()) : null;
+    }
+
     default CategoryDto categoryEntityToDto(Category entity) {
         return CategoryDto.builder().id(entity.getId()).name(entity.getName()).build();
     }

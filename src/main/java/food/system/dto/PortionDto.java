@@ -2,6 +2,7 @@ package food.system.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @AllArgsConstructor
@@ -10,12 +11,10 @@ import lombok.*;
 @Setter
 @Builder
 @JsonIgnoreProperties(value = {"food"}, allowSetters = true)
-@ToString
 public class PortionDto {
     private Integer id;
-    @NotBlank(message = "Unit must not be blank")
     private String unit;
-    @NotBlank(message = "Price must not be blank")
+    @Size(min = 0)
     private Integer price;
     private FoodDto food;
 }

@@ -11,11 +11,11 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Builder
-public class AdminDto  implements Serializable {
+public class AdminDto {
     private Integer id;
     @NotBlank(message = "Firstname must not be blank")
     private String name;
-      @NotNull(message = "Password and username are required!")
+    @NotNull(message = "Password and username are required!")
     private UserDto user;
     private ImageDto image;
 }

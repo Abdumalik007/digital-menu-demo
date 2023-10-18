@@ -13,7 +13,14 @@ public enum Role {
             Permission.ADMIN_READ,
             Permission.ADMIN_UPDATE,
             Permission.ADMIN_DELETE
+    )),
+    WAITER(List.of(
+            Permission.WAITER_CREATE,
+            Permission.WAITER_READ,
+            Permission.WAITER_UPDATE,
+            Permission.WAITER_DELETE
     ));
+
     private final List<Permission> permissions;
 
     public List<SimpleGrantedAuthority> getAuthorities(){

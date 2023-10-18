@@ -79,6 +79,18 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        try {
+            String token = request.getHeader("Authorization").substring(7);
+            String uuid = jwtService.extractSubject(token);
+            redisRepository.deleteById(uuid);
+            return OK_MESSAGE("OK");
+        }catch (Exception e){
+            return INTERNAL_ERROR(null);
+        }
+    }
+
 }
 
 

@@ -20,7 +20,7 @@ public class ReviewController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<?> findAllReviews() {
+    public ResponseEntity<?> findAllReviews() throws InterruptedException {
         return reviewService.findAllReviews();
     }
 

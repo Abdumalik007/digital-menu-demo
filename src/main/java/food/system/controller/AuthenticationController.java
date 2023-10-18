@@ -22,6 +22,11 @@ public class AuthenticationController {
         return userService.login(loginRequest, request);
     }
 
+    @DeleteMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request){
+        return userService.logout(request);
+    }
+
 }
 
 

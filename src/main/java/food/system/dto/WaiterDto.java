@@ -3,16 +3,14 @@ package food.system.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class CategoryDto {
+public class WaiterDto {
     private Integer id;
-    @NotBlank(message = "Name must not be blank")
+    @NotBlank(message = "Username must not be empty")
     private String name;
-    private List<FoodDto> foods;
+    private UserDto user;
 }

@@ -25,7 +25,7 @@ public class Food {
     private String composition;
     @ManyToOne
     private Category category;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Portion> portions;
     private Boolean status;
 }

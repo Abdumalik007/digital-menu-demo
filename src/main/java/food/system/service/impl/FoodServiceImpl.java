@@ -39,8 +39,6 @@ public class FoodServiceImpl implements FoodService {
         try {
             if(foodRepository.existsByName(foodDto.getName()))
                 return INTERNAL_ERROR(null);
-
-            System.out.println(foodDto);
             Food food = foodMapper.toEntity(foodDto);
             food.setStatus(true);
             food.setImage(buildImage(file));
@@ -101,7 +99,7 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public ResponseEntity<List<FoodDto>> findFoodByCategoryId(Integer id) {
-        List<FoodDto> foods = foodRepository.findAllByCategoryId(id).stream()
+        List<FoodDto> foods = foodRepository.findAllByCategoryIdOrderById(id).stream()
                 .map(foodMapper::toDto).toList();
         return ResponseEntity.ok(foods);
     }
@@ -116,7 +114,7 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public ResponseEntity<List<FoodDto>> getAllFoods() {
-        List<FoodDto> foods = foodRepository.findAll().stream()
+        List<FoodDto> foods = foodRepository.findAllByOrderById().stream()
                 .map(foodMapper::toDto).toList();
         return ResponseEntity.ok(foods);
     }
@@ -139,22 +137,20 @@ public class FoodServiceImpl implements FoodService {
         food.setName(foodDto.getName());
         food.setTime(foodDto.getTime());
         food.setComposition(foodDto.getComposition());
-        updatePortions(food.getPortions(), foodDto.getPortions(), food);
+        updatePortions(food.getPortions(), foodDto.getPortions());
         food.setCategory(Category.builder().id(foodDto.getCategory().getId()).build());
     }
 
-    private void updatePortions(List<Portion> oldPortions, List<PortionDto> newPortions, Food food) {
-        oldPortions.clear();
-        for (PortionDto portionDto : newPortions) {
-            if (portionDto == null) break;
-            Portion updated = updateEachPortion(portionDto, food);
-            oldPortions.add(updated);
+    private void updatePortions(List<Portion> oldPortions, List<PortionDto> newPortions) {
+        for (int i = 0; i < 4; i++) {
+            PortionDto newPortion = newPortions.get(i);
+            updateEachPortion(oldPortions.get(i), newPortion);
         }
     }
 
-    private Portion updateEachPortion(PortionDto newPortion, Food food) {
-        return Portion.builder().id(newPortion.getId()).unit(newPortion.getUnit())
-                .price(newPortion.getPrice()).food(food).build();
+    private void updateEachPortion(Portion oldPortion, PortionDto newPortion) {
+        oldPortion.setUnit(newPortion.getUnit());
+        oldPortion.setPrice(newPortion.getPrice());
     }
 
     private void updateFoodImage(Food food, MultipartFile file) throws IOException {
