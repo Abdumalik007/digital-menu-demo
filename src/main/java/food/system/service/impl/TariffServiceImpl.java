@@ -1,11 +1,8 @@
 package food.system.service.impl;
 
 import food.system.dto.TariffDto;
-import food.system.entity.Admin;
 import food.system.entity.Tariff;
-import food.system.entity.User;
 import food.system.repository.TariffRepository;
-import food.system.role.Role;
 import food.system.service.main.TariffService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +26,7 @@ public class TariffServiceImpl implements TariffService {
     public void init() {
         if(tariffRepository.count() == 0) {
             Tariff tariff = Tariff.builder()
-                            .standard(0)
+                            .standardPercent(0)
                             .vipPercent(0)
                             .vipSum(0)
                             .build();
@@ -41,11 +38,14 @@ public class TariffServiceImpl implements TariffService {
     @Override
     public ResponseEntity<TariffDto> updateTariff(TariffDto tariffDto) {
         try {
+
             Tariff tariff = tariffRepository.findById(tariffDto.getId()).orElseThrow();
 
-            tariff.setStandard(tariffDto.getStandard());
+            tariff.setStandardPercent(tariffDto.getStandardPercent());
             tariff.setVipPercent(tariffDto.getVipPercent());
             tariff.setVipSum(tariffDto.getVipSum());
+
+            tariffRepository.save(tariff);
 
             return OK_MESSAGE(tariffDto);
         }catch (Exception e) {
@@ -56,10 +56,10 @@ public class TariffServiceImpl implements TariffService {
 
     @Override
     public ResponseEntity<TariffDto> getTariff() {
-        Tariff tariff = tariffRepository.findById(0).orElseThrow();
+        Tariff tariff = tariffRepository.findById(1).orElseThrow();
         TariffDto tariffDto = TariffDto.builder()
                         .id(tariff.getId())
-                        .standard(tariff.getStandard())
+                        .standardPercent(tariff.getStandardPercent())
                         .vipPercent(tariff.getVipPercent())
                         .vipSum(tariff.getVipSum())
                     .build();

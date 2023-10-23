@@ -27,6 +27,12 @@ public class WaiterController {
         return waiterService.updateWaiter(waiterDto);
     }
 
+    @GetMapping("/search/{name}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> searchWaiter(@PathVariable String name) {
+        return waiterService.search(name);
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> findWaiterById(@PathVariable Integer id) {

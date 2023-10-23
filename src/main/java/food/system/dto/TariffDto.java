@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class TariffDto {
     private Integer id;
-    private Integer standard;
+    private Integer standardPercent;
     private Integer vipPercent;
     private Integer vipSum;
 }

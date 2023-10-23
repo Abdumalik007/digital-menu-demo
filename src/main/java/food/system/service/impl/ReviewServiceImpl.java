@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static food.system.helper.ResponseEntityHelper.INTERNAL_ERROR;
 import static food.system.helper.ResponseEntityHelper.OK_MESSAGE;
@@ -31,8 +30,10 @@ public class ReviewServiceImpl implements ReviewService {
             Review review = reviewMapper.toEntity(reviewDto);
             review.setCreatedAt(LocalDate.now());
             reviewRepository.save(review);
+
             return OK_MESSAGE(reviewDto);
         }catch (Exception e) {
+            e.printStackTrace();
             logger.error("Error while creating review: ".concat(e.getMessage()));
             return INTERNAL_ERROR(null);
         }

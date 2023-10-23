@@ -112,17 +112,30 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<List<CategoryDto>> getAllCategories(boolean withFood) {
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
+        List<CategoryDto> categoryDtoList =
+                categoryRepository.findAll().stream()
+                        .map(c -> CategoryDto.builder()
+                                .id(c.getId())
+                                .name(c.getName())
+                                .build())
+                        .toList();
+        return ResponseEntity.ok(categoryDtoList);
+    }
+
+    @Override
+    public ResponseEntity<List<CategoryDto>> getAllCategoriesWithFood() {
         List<CategoryDto> categoryDtoList =
                 categoryRepository.findAll().stream()
                         .map(c -> CategoryDto.builder()
                                 .id(c.getId())
                                 .name(c.getName())
                                 .foods(
-                                        (withFood) ?
-                                                c.getFoods().stream().map(foodMapper::toDto).toList()
-                                                : null
-                                ).build())
+                                        c.getFoods() != null ?
+                                                c.getFoods().stream().map(foodMapper::toDto).toList() :
+                                                null
+                                )
+                                .build())
                         .toList();
         return ResponseEntity.ok(categoryDtoList);
     }

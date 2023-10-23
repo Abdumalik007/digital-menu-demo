@@ -11,5 +11,6 @@ public interface CategoryService {
     ResponseEntity<CategoryDto> findCategoryById(Integer id);
     ResponseEntity<?> deleteCategoryById(Integer id);
     ResponseEntity<List<CategoryDto>> search(String name);
-    ResponseEntity<List<CategoryDto>> getAllCategories(boolean withFood);
+    ResponseEntity<List<CategoryDto>> getAllCategories();
+    ResponseEntity<List<CategoryDto>> getAllCategoriesWithFood();
 }

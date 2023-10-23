@@ -1,6 +1,7 @@
 package food.system.controller;
 
 
+import food.system.dto.CategoryDto;
 import food.system.service.main.CategoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
+
+import static food.system.controller.StatisticController.USER_AMOUNT;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,7 +36,6 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> findCategoryById(@PathVariable Integer id) {
         return categoryService.findCategoryById(id);
     }
@@ -51,9 +54,17 @@ public class CategoryController {
     }
 
     @GetMapping("/get-all")
-    @Cacheable(value = "categoryCache", key = "'allCategories'", unless = "#withFood == false")
-    public ResponseEntity<?> getAllCategories(@RequestParam boolean withFood) {
-        return categoryService.getAllCategories(withFood);
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllCategories() {
+        return categoryService.getAllCategories();
     }
+
+    @GetMapping("/get-all-with-food")
+    @Cacheable(key = "'allCategories'")
+    public ResponseEntity<List<CategoryDto>> getAllCategoriesWithFoods(HttpServletRequest request) {
+        return categoryService.getAllCategoriesWithFood();
+    }
+
+
 
 }

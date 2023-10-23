@@ -33,7 +33,6 @@ public class FoodController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> findFoodById(@PathVariable Integer id) {
         return foodService.findFoodById(id);
     }
@@ -46,13 +45,11 @@ public class FoodController {
     }
 
     @GetMapping("/search/{name}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> searchFood(@PathVariable String name) {
         return foodService.search(name);
     }
 
     @GetMapping("/get-all")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_WAITER')")
     @Cacheable(key = "'allFoods'")
     public ResponseEntity<?> getAllFoods() {
         return foodService.getAllFoods();
@@ -60,13 +57,12 @@ public class FoodController {
 
 
     @GetMapping("/category-id/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> findFoodByCategoryId(@PathVariable Integer id) {
         return foodService.findFoodByCategoryId(id);
     }
 
     @PutMapping("/food-status")
-    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_WAITER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_WAITER')")
     public ResponseEntity<?> changeStatus(@RequestParam Integer id,
                                           @RequestParam boolean status) {
         return foodService.changeStatus(id, status);

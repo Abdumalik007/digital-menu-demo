@@ -1,16 +1,19 @@
 package food.system.util;
 
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
 import static food.system.controller.StatisticController.USER_AMOUNT;
 
 
-@EnableScheduling
+
 @Component
 public class ScheduleJob {
-    @Scheduled(cron = "0 0 * * * ?")
+
+    @Scheduled(cron = "59 59 23 * * *")
     public void doSomethingEachDayAtMidnight() {
+        System.err.println("CLEARED");
         USER_AMOUNT.clear();
     }
+
 }

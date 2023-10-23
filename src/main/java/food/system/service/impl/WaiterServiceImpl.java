@@ -1,5 +1,6 @@
 package food.system.service.impl;
 
+import food.system.dto.FoodDto;
 import food.system.dto.WaiterDto;
 import food.system.entity.User;
 import food.system.entity.Waiter;
@@ -84,6 +85,13 @@ public class WaiterServiceImpl implements WaiterService {
         List<WaiterDto> waiters = waiterRepository.findAll()
                 .stream().map(waiterMapper::toDto).toList();
         return OK_MESSAGE(waiters);
+    }
+
+    @Override
+    public ResponseEntity<List<WaiterDto>> search(String name) {
+        List<WaiterDto> foods = waiterRepository.findAllByNameContainsIgnoreCase(name).stream()
+                .map(waiterMapper::toDto).toList();
+        return ResponseEntity.ok(foods);
     }
 
     @Override

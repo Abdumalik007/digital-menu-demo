@@ -1,5 +1,6 @@
 package food.system.service.main;
 
+import food.system.dto.FoodDto;
 import food.system.dto.WaiterDto;
 import org.springframework.http.ResponseEntity;
 
@@ -10,5 +11,6 @@ public interface WaiterService {
     ResponseEntity<?> updateWaiter(WaiterDto waiterDto);
     ResponseEntity<WaiterDto> findWaiterById(Integer id);
     ResponseEntity<List<WaiterDto>> findAllWaiters();
+    ResponseEntity<List<WaiterDto>> search(String name);
     ResponseEntity<?> deleteWaiterById(Integer id);
 }

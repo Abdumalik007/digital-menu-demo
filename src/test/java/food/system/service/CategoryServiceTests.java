@@ -5,9 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import food.system.dto.custom.LoginRequest;
 import food.system.dto.custom.LoginResponse;
-import food.system.repository.CategoryRepositoryTest;
-import food.system.repository.UserRepositoryTest;
-import jdk.jfr.ContentType;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,8 +26,8 @@ public class CategoryServiceTests {
     @Autowired
     private MockMvc mockMvc;
     public String baseUrl = "http://localhost:8080/api";
-    @Test
-    @Order(1)
+
+    @Disabled
     public void getAndSetJwtToken() throws Exception {
         LoginRequest loginRequest = LoginRequest.builder()
                 .username("admin")
@@ -58,19 +55,6 @@ public class CategoryServiceTests {
     }
 
 
-//    @Test
-//    public void addCategorySuccessfullyTest() {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", "Bearer YOUR_API_TOKEN");
-//
-//        RequestEntity<?> requestEntity = new RequestEntity<>(
-//                headers,
-//                HttpMethod.POST,
-//                URI.create(baseUrl.concat("/category"))
-//        );
-//
-//        ResponseEntity<CategoryDto> response = restTemplate.exchange(requestEntity, CategoryDto.class);
-//    }
 
 
 

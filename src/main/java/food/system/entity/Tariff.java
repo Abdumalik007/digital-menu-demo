@@ -16,7 +16,7 @@ public class Tariff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-    private Integer standard;
+    private Integer standardPercent;
     private Integer vipPercent;
     private Integer vipSum;
 }

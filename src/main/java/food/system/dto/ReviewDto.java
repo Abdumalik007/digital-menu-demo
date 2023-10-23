@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
+@ToString
 public class ReviewDto {
     private Integer id;
     private String name;
