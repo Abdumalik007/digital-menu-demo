@@ -155,7 +155,6 @@ public class FoodServiceImpl implements FoodService {
 
     private void updateFoodImage(Food food, MultipartFile file) throws IOException {
         Image image = food.getImage();
-        System.out.println(image);
         imageRepository.deleteById(image.getId());
         Files.delete(Path.of("uploads/" + image.getPath()));
         food.setImage(buildImage(file));

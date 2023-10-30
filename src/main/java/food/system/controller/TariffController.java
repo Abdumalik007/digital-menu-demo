@@ -23,7 +23,6 @@ public class TariffController {
 
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<TariffDto> getTariff() {
         return tariffService.getTariff();
     }

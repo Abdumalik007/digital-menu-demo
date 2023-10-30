@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static food.system.helper.ResponseEntityHelper.INTERNAL_ERROR;
-import static food.system.helper.ResponseEntityHelper.OK_MESSAGE;
 
 @Service
 @RequiredArgsConstructor
@@ -80,17 +80,15 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ResponseEntity<?> logout(HttpServletRequest request) {
+    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         try {
             String token = request.getHeader("Authorization").substring(7);
             String uuid = jwtService.extractSubject(token);
             redisRepository.deleteById(uuid);
-            return OK_MESSAGE("OK");
         }catch (Exception e){
-            return INTERNAL_ERROR(null);
+            logger.error("Error while logging out!");
         }
     }
-
 }
 
 

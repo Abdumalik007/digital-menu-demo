@@ -1,6 +1,8 @@
 package food.system.service.impl;
 
 import food.system.dto.CategoryDto;
+import food.system.dto.FoodDto;
+import food.system.dto.PortionDto;
 import food.system.entity.Category;
 import food.system.entity.Food;
 import food.system.entity.Image;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +41,8 @@ public class CategoryServiceImpl implements CategoryService {
             if(categoryRepository.existsByName(name))
                 return INTERNAL_ERROR(null);
             Category category = Category.builder().name(name).build();
-            category = categoryRepository.save(category);
 
+            category = categoryRepository.save(category);
             CategoryDto categoryDto = CategoryDto.builder()
                     .id(category.getId()).name(category.getName()).build();
 
@@ -55,6 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             if(categoryRepository.existsByNameAndIdIsNot(name, id))
                 return INTERNAL_ERROR(null);
+            System.out.println("All: " + categoryRepository.findAll());
             Category category = categoryRepository.findById(id).orElseThrow();
             category.setName(name);
             categoryRepository.save(category);
@@ -126,7 +130,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<List<CategoryDto>> getAllCategoriesWithFood() {
         List<CategoryDto> categoryDtoList =
-                categoryRepository.findAll().stream()
+                categoryRepository.findAllByOrderByFoodsPortionsId().stream()
                         .map(c -> CategoryDto.builder()
                                 .id(c.getId())
                                 .name(c.getName())
@@ -137,6 +141,13 @@ public class CategoryServiceImpl implements CategoryService {
                                 )
                                 .build())
                         .toList();
+
+        for (CategoryDto c : categoryDtoList) {
+            for (FoodDto f : c.getFoods()) {
+                f.setPortions(f.getPortions().stream().filter(p ->
+                        p.getPrice() != null).sorted(Comparator.comparingInt(PortionDto::getPrice)).toList());
+            }
+        }
         return ResponseEntity.ok(categoryDtoList);
     }
 

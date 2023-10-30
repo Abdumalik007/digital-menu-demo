@@ -11,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/food")
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class FoodController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> createFood(@ModelAttribute @Valid FoodDto foodDto,
+    public ResponseEntity<FoodDto> createFood(@ModelAttribute @Valid FoodDto foodDto,
                                         @RequestParam MultipartFile file) {
         return foodService.createFood(foodDto, file);
     }
@@ -33,7 +35,7 @@ public class FoodController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findFoodById(@PathVariable Integer id) {
+    public ResponseEntity<FoodDto> findFoodById(@PathVariable Integer id) {
         return foodService.findFoodById(id);
     }
 
@@ -45,25 +47,25 @@ public class FoodController {
     }
 
     @GetMapping("/search/{name}")
-    public ResponseEntity<?> searchFood(@PathVariable String name) {
+    public ResponseEntity<List<FoodDto>> searchFood(@PathVariable String name) {
         return foodService.search(name);
     }
 
     @GetMapping("/get-all")
     @Cacheable(key = "'allFoods'")
-    public ResponseEntity<?> getAllFoods() {
+    public ResponseEntity<List<FoodDto>> getAllFoods() {
         return foodService.getAllFoods();
     }
 
 
     @GetMapping("/category-id/{id}")
-    public ResponseEntity<?> findFoodByCategoryId(@PathVariable Integer id) {
+    public ResponseEntity<List<FoodDto>> findFoodByCategoryId(@PathVariable Integer id) {
         return foodService.findFoodByCategoryId(id);
     }
 
     @PutMapping("/food-status")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_WAITER')")
-    public ResponseEntity<?> changeStatus(@RequestParam Integer id,
+    public ResponseEntity<FoodDto> changeStatus(@RequestParam Integer id,
                                           @RequestParam boolean status) {
         return foodService.changeStatus(id, status);
     }

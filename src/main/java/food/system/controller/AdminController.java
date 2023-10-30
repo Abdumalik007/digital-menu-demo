@@ -20,13 +20,13 @@ public class AdminController {
     private final AdminService adminService;
 
     @PutMapping
-    public ResponseEntity<?> updateAdmin(@ModelAttribute @Valid AdminDto adminDto,
+    public ResponseEntity<AdminDto> updateAdmin(@ModelAttribute @Valid AdminDto adminDto,
                                          @RequestParam(required = false) MultipartFile file){
         return adminService.updateAdmin(adminDto, file);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findAdminById(@PathVariable Integer id) {
+    public ResponseEntity<AdminDto> findAdminById(@PathVariable Integer id) {
         return adminService.findAdminById(id);
     }
 }

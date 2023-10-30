@@ -15,17 +15,17 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<?> createReview(@RequestBody ReviewDto reviewDto) {
+    public ResponseEntity<ReviewDto> createReview(@RequestBody ReviewDto reviewDto) {
         return reviewService.createReview(reviewDto);
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<?> findAllReviews() throws InterruptedException {
+    public ResponseEntity<List<ReviewDto>> findAllReviews() throws InterruptedException {
         return reviewService.findAllReviews();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findReviewById(@PathVariable Integer id) {
+    public ResponseEntity<ReviewDto> findReviewById(@PathVariable Integer id) {
         return reviewService.findReviewById(id);
     }
 

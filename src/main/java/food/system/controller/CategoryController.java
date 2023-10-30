@@ -25,18 +25,18 @@ public class CategoryController {
 
     @PostMapping("/{name}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> createCategory(@PathVariable String name) {
+    public ResponseEntity<CategoryDto> createCategory(@PathVariable String name) {
         return categoryService.createCategory(name);
     }
 
     @PutMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateCategory(@RequestParam String name, @RequestParam Integer id) {
+    public ResponseEntity<CategoryDto> updateCategory(@RequestParam String name, @RequestParam Integer id) {
         return categoryService.updateCategory(name, id);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findCategoryById(@PathVariable Integer id) {
+    public ResponseEntity<CategoryDto> findCategoryById(@PathVariable Integer id) {
         return categoryService.findCategoryById(id);
     }
 
@@ -49,13 +49,12 @@ public class CategoryController {
 
     @GetMapping("/search/{name}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> searchCategory(@PathVariable String name) {
+    public ResponseEntity<List<CategoryDto>> searchCategory(@PathVariable String name) {
         return categoryService.search(name);
     }
 
     @GetMapping("/get-all")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getAllCategories() {
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
