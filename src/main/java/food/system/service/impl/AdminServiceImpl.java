@@ -50,7 +50,7 @@ public class AdminServiceImpl implements AdminService {
                                     .password(encoder.encode("123456"))
                                     .role(Role.ADMIN).build()
                     )
-                    .name("Falonchi")
+                    .name("Name")
                     .build();
             adminRepository.save(admin);
         }

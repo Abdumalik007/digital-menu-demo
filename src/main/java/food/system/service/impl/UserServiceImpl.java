@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
         try {
             redisRepository.save(userSession);
         }catch (Exception e){
+            e.printStackTrace();
             logger.error("Error while logging in: ".concat(e.getMessage()));
             return INTERNAL_ERROR(null);
         }

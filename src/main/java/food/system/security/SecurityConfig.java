@@ -37,7 +37,8 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers(
                                         HttpMethod.GET,
-                                        "/images/**", "/category/**", "/food/**")
+                                        "/images/**", "/category/**", "/food/**",
+                                        "/tariff/**")
                                 .permitAll()
                                 .requestMatchers(HttpMethod.POST,
                                         "/review/**",

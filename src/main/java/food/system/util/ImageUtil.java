@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -24,8 +23,7 @@ public class ImageUtil {
     public static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
 
     public static String uploadImage(MultipartFile file) {
-        String ext = Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[1];
-        String imageName = UUID.randomUUID() + "." + ext;
+        String imageName = UUID.randomUUID() + "." + "jpg";
         Path path = Paths.get("uploads" + File.separator + imageName);
         try {
             BufferedImage originalImage = ImageIO.read(file.getInputStream());
