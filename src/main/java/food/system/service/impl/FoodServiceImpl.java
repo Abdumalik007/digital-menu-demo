@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static food.system.helper.ResponseEntityHelper.*;
-import static food.system.util.ImageUtil.buildImage;
+import static food.system.util.ImageUtil.*;
 
 @RequiredArgsConstructor
 @Service
@@ -89,7 +90,7 @@ public class FoodServiceImpl implements FoodService {
             Food food = foodRepository.findById(id).orElseThrow();
             Image image = food.getImage();
             foodRepository.deleteById(id);
-            Files.delete(Path.of("uploads/" + image.getPath()));
+            Files.delete(Path.of(IMAGE_PATH + File.separator + image.getPath()));
             return OK_MESSAGE("Ok");
         }catch (Exception e) {
             logger.error("Error while deleting food: ".concat(e.getMessage()));
@@ -156,7 +157,7 @@ public class FoodServiceImpl implements FoodService {
     private void updateFoodImage(Food food, MultipartFile file) throws IOException {
         Image image = food.getImage();
         imageRepository.deleteById(image.getId());
-        Files.delete(Path.of("uploads/" + image.getPath()));
+        Files.delete(Path.of(IMAGE_PATH + File.separator + image.getPath()));
         food.setImage(buildImage(file));
     }
 }

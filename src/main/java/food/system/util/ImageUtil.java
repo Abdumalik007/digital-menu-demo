@@ -21,10 +21,11 @@ import java.util.UUID;
 @Component
 public class ImageUtil {
     public static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
+    public static String IMAGE_PATH = "/var/www/html/images";
 
     public static String uploadImage(MultipartFile file) {
         String imageName = UUID.randomUUID() + "." + "jpg";
-        Path path = Paths.get("uploads" + File.separator + imageName);
+        Path path = Paths.get(IMAGE_PATH + File.separator + imageName);
         try {
             BufferedImage originalImage = ImageIO.read(file.getInputStream());
 
