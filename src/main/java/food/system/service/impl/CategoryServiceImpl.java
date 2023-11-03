@@ -141,13 +141,6 @@ public class CategoryServiceImpl implements CategoryService {
                                 )
                                 .build())
                         .toList();
-
-        for (CategoryDto c : categoryDtoList) {
-            for (FoodDto f : c.getFoods()) {
-                f.setPortions(f.getPortions().stream().filter(p ->
-                        p.getPrice() != null).sorted(Comparator.comparingInt(PortionDto::getPrice)).toList());
-            }
-        }
         return ResponseEntity.ok(categoryDtoList);
     }
 

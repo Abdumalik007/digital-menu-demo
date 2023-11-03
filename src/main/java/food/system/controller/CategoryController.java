@@ -59,7 +59,7 @@ public class CategoryController {
     }
 
     @GetMapping("/get-all-with-food")
-    @Cacheable(key = "'allCategories'")
+//    @Cacheable(key = "'allCategories'")
     public ResponseEntity<List<CategoryDto>> getAllCategoriesWithFoods(HttpServletRequest request) {
         return categoryService.getAllCategoriesWithFood();
     }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.SortComparator;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class Category {
     @Column(unique = true)
     private String name;
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, orphanRemoval = true)
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SUBSELECT)
+    @OrderBy(value = "status DESC")
     private List<Food> foods;
 }
