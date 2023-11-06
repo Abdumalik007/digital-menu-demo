@@ -11,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.List;
-
-import static food.system.controller.StatisticController.USER_AMOUNT;
 
 @RequiredArgsConstructor
 @RestController
@@ -59,7 +56,7 @@ public class CategoryController {
     }
 
     @GetMapping("/get-all-with-food")
-//    @Cacheable(key = "'allCategories'")
+    @Cacheable(key = "'allCategories'")
     public ResponseEntity<List<CategoryDto>> getAllCategoriesWithFoods(HttpServletRequest request) {
         return categoryService.getAllCategoriesWithFood();
     }

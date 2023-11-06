@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static food.system.helper.ResponseEntityHelper.*;
+import static food.system.util.ImageUtil.IMAGE_PATH;
 
 @RequiredArgsConstructor
 @Service
@@ -93,7 +94,7 @@ public class CategoryServiceImpl implements CategoryService {
             for (Food food : foods) {
                 Image image = food.getImage();
                 foodRepository.deleteById(food.getId());
-                Files.delete(Path.of("uploads/" + image.getPath()));
+                Files.delete(Path.of(IMAGE_PATH + File.separator + image.getPath()));
             }
             return OK_MESSAGE("OK");
         }catch (Exception e) {

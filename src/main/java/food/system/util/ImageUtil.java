@@ -39,13 +39,11 @@ public class ImageUtil {
 
 
     private static BufferedImage compressImage(BufferedImage originalImage) {
-        // Создаем новое изображение с настройками для сжатия без потери качества
         BufferedImage compressedImage = new BufferedImage(originalImage.getWidth(), originalImage.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = compressedImage.createGraphics();
         g2d.drawImage(originalImage, 0, 0, null);
         g2d.dispose();
 
-        // Качество сжатия (1.0f - максимальное качество без потери)
         float compressionQuality = 1f;
 
         ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
@@ -62,7 +60,5 @@ public class ImageUtil {
                 .build();
 
     }
-
-
 
 }

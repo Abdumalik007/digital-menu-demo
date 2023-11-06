@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +28,7 @@ import java.util.Optional;
 
 import static food.system.helper.ResponseEntityHelper.INTERNAL_ERROR;
 import static food.system.helper.ResponseEntityHelper.NOT_FOUND;
+import static food.system.util.ImageUtil.IMAGE_PATH;
 import static food.system.util.ImageUtil.buildImage;
 
 
@@ -104,7 +106,7 @@ public class AdminServiceImpl implements AdminService {
         if(admin.getImage() != null) {
             Image oldImage = admin.getImage();
             imageRepository.deleteById(oldImage.getId());
-            Files.delete(Path.of("uploads/" + oldImage.getPath()));
+            Files.delete(Path.of(IMAGE_PATH + File.separator + oldImage.getPath()));
         }
         admin.setImage(buildImage(file));
     }

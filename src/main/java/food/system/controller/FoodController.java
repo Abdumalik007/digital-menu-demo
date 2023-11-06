@@ -52,7 +52,6 @@ public class FoodController {
     }
 
     @GetMapping("/get-all")
-    @Cacheable(key = "'allFoods'")
     public ResponseEntity<List<FoodDto>> getAllFoods() {
         return foodService.getAllFoods();
     }
