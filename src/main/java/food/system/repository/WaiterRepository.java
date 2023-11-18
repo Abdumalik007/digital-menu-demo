@@ -1,6 +1,5 @@
 package food.system.repository;
 
-import food.system.entity.Food;
 import food.system.entity.Waiter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

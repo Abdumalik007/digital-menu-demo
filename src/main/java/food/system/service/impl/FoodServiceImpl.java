@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static food.system.helper.ResponseEntityHelper.*;
-import static food.system.util.ImageUtil.*;
+import static food.system.util.ImageUtil.IMAGE_PATH;
+import static food.system.util.ImageUtil.buildImage;
 
 @RequiredArgsConstructor
 @Service
@@ -38,8 +39,10 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public ResponseEntity<FoodDto> createFood(FoodDto foodDto, MultipartFile file) {
         try {
-            if(foodRepository.existsByName(foodDto.getName()))
+            if(foodRepository.findAllByNameAndCategory_Id
+                    (foodDto.getName(), foodDto.getCategory().getId()).size() > 0)
                 return INTERNAL_ERROR(null);
+
             Food food = foodMapper.toEntity(foodDto);
             food.setStatus(true);
             food.setImage(buildImage(file));
@@ -57,7 +60,10 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public ResponseEntity<FoodDto> updateFood(FoodDto foodDto, MultipartFile file) {
         try {
-            if(foodRepository.existsByNameAndIdIsNot(foodDto.getName(), foodDto.getId()))
+            if(foodRepository.findAllByNameAndCategory_IdAndIdIsNot
+                            (foodDto.getName(), foodDto.getCategory().getId(), foodDto.getId())
+                    .size() > 0
+            )
                 return INTERNAL_ERROR(null);
 
             Food food = foodRepository.findById(foodDto.getId()).orElseThrow();
@@ -78,9 +84,19 @@ public class FoodServiceImpl implements FoodService {
 
 
     @Override
-    public ResponseEntity<FoodDto> findFoodById(Integer id) {
-        return foodRepository.findById(id).map(f -> ResponseEntity.ok(foodMapper.toDto(f)))
-                .orElseGet(() -> NOT_FOUND(null));
+    public ResponseEntity<List<FoodDto>> findFoodByStatus(String status) {
+        List<FoodDto> foods;
+        if(status.equals("active")) {
+            foods = foodRepository.findAllByStatus(true).stream()
+                    .map(foodMapper::toDto).toList();
+        }else if(status.equals("inactive")) {
+            foods = foodRepository.findAllByStatus(false).stream()
+                    .map(foodMapper::toDto).toList();
+        }else {
+            foods = foodRepository.findAllByOrderById().stream()
+                    .map(foodMapper::toDto).toList();
+        }
+        return ResponseEntity.ok(foods);
     }
 
 
@@ -104,7 +120,11 @@ public class FoodServiceImpl implements FoodService {
                 .map(foodMapper::toDto).toList();
         return ResponseEntity.ok(foods);
     }
-
+    @Override
+    public ResponseEntity<FoodDto> findFoodById(Integer id) {
+        return foodRepository.findById(id).map(f -> ResponseEntity.ok(foodMapper.toDto(f)))
+                .orElseGet(() -> NOT_FOUND(null));
+    }
 
     @Override
     public ResponseEntity<List<FoodDto>> search(String name) {

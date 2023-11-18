@@ -1,12 +1,12 @@
 package food.system.service.impl;
 
-import food.system.dto.FoodDto;
+import food.system.dto.UserDto;
 import food.system.dto.WaiterDto;
 import food.system.entity.User;
 import food.system.entity.Waiter;
 import food.system.mapper.WaiterMapper;
 import food.system.repository.WaiterRepository;
-import food.system.role.Role;
+import food.system.security.role.Role;
 import food.system.service.main.WaiterService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -60,9 +60,7 @@ public class WaiterServiceImpl implements WaiterService {
             Waiter waiter = waiterRepository.findById(waiterDto.getId()).orElseThrow();
 
             waiter.setName(waiterDto.getName());
-            waiter.getUser().setUsername(waiterDto.getUser().getUsername());
-            if(waiterDto.getUser().getPassword() != null)
-                waiter.getUser().setPassword(encoder.encode(waiterDto.getUser().getPassword()));
+            updateUserProperties(waiterDto.getUser(), waiter.getUser());
 
             waiterRepository.save(waiter);
 
@@ -72,6 +70,12 @@ public class WaiterServiceImpl implements WaiterService {
             return INTERNAL_ERROR(null);
         }
 
+    }
+
+    private void updateUserProperties(UserDto newUser, User oldUser) {
+        oldUser.setUsername(newUser.getUsername());
+        if(newUser.getPassword().length() > 5)
+            oldUser.setPassword(encoder.encode(newUser.getPassword()));
     }
 
     @Override
@@ -100,9 +104,11 @@ public class WaiterServiceImpl implements WaiterService {
             Waiter waiter = waiterRepository.findById(id).orElseThrow();
             waiterRepository.delete(waiter);
             return OK_MESSAGE("Ok");
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error("Error while deleting waiter: ".concat(e.getMessage()));
             return INTERNAL_ERROR(null);
         }
     }
+
+
 }

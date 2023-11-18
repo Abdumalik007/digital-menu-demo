@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Component
-public class JwtService {
+public class JwtUtil {
 
 
     @Value("${jwt.security.key}")

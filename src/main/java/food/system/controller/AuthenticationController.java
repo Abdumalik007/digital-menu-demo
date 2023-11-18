@@ -8,8 +8,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 @RequiredArgsConstructor
@@ -26,9 +27,15 @@ public class AuthenticationController {
     }
 
     @DeleteMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response){
-        userService.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+    public ResponseEntity<?> logout(HttpServletRequest request){
+        return userService.logout(request);
     }
+
+
+//    @GetMapping("/access-denied")
+//    public String accessDeniedHandler(HttpServletResponse response) throws IOException {
+//        return "{\"error\": \"Token expired\"}";
+//    }
 
 }
 

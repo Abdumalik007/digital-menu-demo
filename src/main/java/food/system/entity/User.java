@@ -2,7 +2,7 @@ package food.system.entity;
 
 
 
-import food.system.role.Role;
+import food.system.security.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

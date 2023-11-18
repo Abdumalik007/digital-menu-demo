@@ -1,4 +1,4 @@
-package food.system.role;
+package food.system.security.role;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

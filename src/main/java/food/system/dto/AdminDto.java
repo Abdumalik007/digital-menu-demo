@@ -4,13 +4,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.io.Serializable;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
+@ToString
 public class AdminDto {
     private Integer id;
     @NotBlank(message = "Firstname must not be blank")

@@ -10,9 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 @EnableScheduling
 @EnableAspectJAutoProxy
-public class FoodMenuApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(FoodMenuApplication.class, args);
-    }
+public class DemoApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(DemoApplication.class, args);
+	}
 
 }

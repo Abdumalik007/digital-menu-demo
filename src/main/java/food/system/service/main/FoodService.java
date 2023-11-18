@@ -10,6 +10,7 @@ public interface FoodService {
     ResponseEntity<FoodDto> createFood(FoodDto foodDto, MultipartFile file);
     ResponseEntity<FoodDto> updateFood(FoodDto categoryDto, MultipartFile file);
     ResponseEntity<FoodDto> findFoodById(Integer id);
+    ResponseEntity<List<FoodDto>> findFoodByStatus(String status);
     ResponseEntity<?> deleteFoodById(Integer id);
     ResponseEntity<List<FoodDto>> findFoodByCategoryId(Integer id);
     ResponseEntity<List<FoodDto>> search(String name);

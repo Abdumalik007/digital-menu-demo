@@ -7,8 +7,8 @@ import food.system.entity.User;
 import food.system.redis.UserSession;
 import food.system.redis.UserSessionRedisRepository;
 import food.system.repository.UserRepository;
-import food.system.role.Role;
-import food.system.security.jwt.JwtService;
+import food.system.security.role.Role;
+import food.system.security.jwt.JwtUtil;
 import food.system.service.main.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,17 +34,18 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserSessionRedisRepository redisRepository;
-    private final JwtService jwtService;
+    private final JwtUtil jwtUtil;
 
 
     @Override
     public ResponseEntity<LoginResponse> login(LoginRequest loginRequest, HttpServletRequest request) {
         Optional<User> userOptional = userRepository.findUserByUsername(loginRequest.getUsername());
+
         if(userOptional.isEmpty())
-            return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).build();
+            return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 
         if(!passwordEncoder.matches(loginRequest.getPassword(), userOptional.get().getPassword()))
-            return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).build();
+            return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).build();
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
                         null,
                         userOptional.get().getAuthorities()
                 );
+
         authenticationToken.setDetails(request);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
@@ -65,11 +66,11 @@ public class UserServiceImpl implements UserService {
         try {
             redisRepository.save(userSession);
         }catch (Exception e){
-            e.printStackTrace();
             logger.error("Error while logging in: ".concat(e.getMessage()));
             return INTERNAL_ERROR(null);
         }
-        String jwtToken = jwtService.generateToken(uuid);
+
+        String jwtToken = jwtUtil.generateToken(uuid);
 
         LoginResponse response = new LoginResponse();
         Role role = userOptional.get().getRole();
@@ -81,15 +82,18 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
         try {
             String token = request.getHeader("Authorization").substring(7);
-            String uuid = jwtService.extractSubject(token);
+            String uuid = jwtUtil.extractSubject(token);
             redisRepository.deleteById(uuid);
         }catch (Exception e){
             logger.error("Error while logging out!");
         }
+        return ResponseEntity.ok("Ok");
     }
+
+
 }
 
 

@@ -9,7 +9,7 @@ import food.system.entity.User;
 import food.system.mapper.AdminMapper;
 import food.system.repository.AdminRepository;
 import food.system.repository.ImageRepository;
-import food.system.role.Role;
+import food.system.security.role.Role;
 import food.system.service.main.AdminService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -96,8 +96,8 @@ public class AdminServiceImpl implements AdminService {
     private void updateAdminUser(AdminDto adminDto, Admin admin){
         User user = admin.getUser();
         UserDto userDto = adminDto.getUser();
-        user.setUsername(adminDto.getUser().getUsername());
-        if(userDto.getPassword() != null)
+        user.setUsername(userDto.getUsername());
+        if(userDto.getPassword().length() > 5)
             user.setPassword(encoder.encode(userDto.getPassword()));
     }
 

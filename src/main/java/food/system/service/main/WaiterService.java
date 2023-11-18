@@ -1,6 +1,5 @@
 package food.system.service.main;
 
-import food.system.dto.FoodDto;
 import food.system.dto.WaiterDto;
 import org.springframework.http.ResponseEntity;
 

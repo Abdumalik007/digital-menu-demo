@@ -5,7 +5,6 @@ import food.system.service.main.FoodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +37,10 @@ public class FoodController {
     public ResponseEntity<FoodDto> findFoodById(@PathVariable Integer id) {
         return foodService.findFoodById(id);
     }
-
-
+    @GetMapping("/by-status/{status}")
+    public ResponseEntity<List<FoodDto>> getFoodByStatus(@PathVariable String status) {
+        return foodService.findFoodByStatus(status);
+    }
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteFoodById(@PathVariable Integer id) {

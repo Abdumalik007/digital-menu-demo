@@ -1,8 +1,6 @@
 package food.system.util;
 
 import food.system.entity.Image;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +18,6 @@ import java.util.UUID;
 
 @Component
 public class ImageUtil {
-    public static final Logger logger = LoggerFactory.getLogger(ImageUtil.class);
     public static String IMAGE_PATH = "/var/www/html/images";
 
     public static String uploadImage(MultipartFile file) {
@@ -58,7 +55,7 @@ public class ImageUtil {
         return Image.builder()
                 .path(ImageUtil.uploadImage(file))
                 .build();
-
     }
+
 
 }

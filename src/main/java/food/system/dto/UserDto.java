@@ -2,7 +2,7 @@ package food.system.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import food.system.role.Role;
+import food.system.security.role.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Setter
 @Builder
 @JsonIgnoreProperties(value = {"password", "role", "id"}, allowSetters = true)
+@ToString
 public class UserDto implements Serializable {
     private Integer id;
     @NotBlank(message = "Username must not be empty")

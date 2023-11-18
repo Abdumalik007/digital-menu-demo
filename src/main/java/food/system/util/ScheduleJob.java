@@ -11,7 +11,6 @@ import static food.system.controller.StatisticController.USER_AMOUNT;
 
 @Component
 public class ScheduleJob {
-
     @Scheduled(cron = "59 59 23 * * *", zone = "Asia/Bishkek")
     public void doSomethingEachDayAtMidnight() {
         System.err.println(new Date() + " CLEARED");

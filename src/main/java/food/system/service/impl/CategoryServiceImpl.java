@@ -1,8 +1,6 @@
 package food.system.service.impl;
 
 import food.system.dto.CategoryDto;
-import food.system.dto.FoodDto;
-import food.system.dto.PortionDto;
 import food.system.entity.Category;
 import food.system.entity.Food;
 import food.system.entity.Image;
@@ -10,7 +8,6 @@ import food.system.mapper.FoodMapper;
 import food.system.repository.CategoryRepository;
 import food.system.repository.FoodRepository;
 import food.system.service.main.CategoryService;
-import food.system.service.main.FoodService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
