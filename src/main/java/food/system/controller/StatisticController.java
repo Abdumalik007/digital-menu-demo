@@ -9,11 +9,11 @@ import java.util.HashSet;
 
 @RestController
 @RequestMapping("/statistic")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class StatisticController {
     public static HashSet<String> USER_AMOUNT = new HashSet<>();
 
     @GetMapping("/user-amount")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Integer getUserAmount() {
         return USER_AMOUNT.size();
     }

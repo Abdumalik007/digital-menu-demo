@@ -34,10 +34,13 @@ public class FoodController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<FoodDto> findFoodById(@PathVariable Integer id) {
         return foodService.findFoodById(id);
     }
+
     @GetMapping("/by-status/{status}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_WAITER')")
     public ResponseEntity<List<FoodDto>> getFoodByStatus(@PathVariable String status) {
         return foodService.findFoodByStatus(status);
     }
@@ -53,12 +56,14 @@ public class FoodController {
     }
 
     @GetMapping("/get-all")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_WAITER')")
     public ResponseEntity<List<FoodDto>> getAllFoods() {
         return foodService.getAllFoods();
     }
 
 
     @GetMapping("/category-id/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_WAITER')")
     public ResponseEntity<List<FoodDto>> findFoodByCategoryId(@PathVariable Integer id) {
         return foodService.findFoodByCategoryId(id);
     }

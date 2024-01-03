@@ -25,7 +25,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
-    private final UserService userService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,9 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(
-                                        HttpMethod.GET,
-                                        "/images/**", "/category/**", "/food/**",
-                                        "/tariff/**")
+                                        HttpMethod.GET, "/category/**",
+                                        "/food/**", "/tariff/**")
                                 .permitAll()
                                 .requestMatchers(HttpMethod.POST,
                                         "/review/**",

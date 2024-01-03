@@ -12,7 +12,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request,
                        HttpServletResponse response,
                         AccessDeniedException exc) throws IOException {
-        response.setStatus(401);
+        response.setStatus(403);
         response.setContentType("application/json");
         response.getWriter().write("{\"error\": \"Resource is forbidden\"}");
         response.getWriter().close();

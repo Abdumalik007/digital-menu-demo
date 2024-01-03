@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>food.system</groupId>
-    <artifactId>food-menu</artifactId>
+    <artifactId>demo-menu</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>food-menu</name>
-    <description>food-menu</description>
+    <name>demo-menu</name>
+    <description>demo-menu</description>
     <properties>
         <java.version>17</java.version>
     </properties>

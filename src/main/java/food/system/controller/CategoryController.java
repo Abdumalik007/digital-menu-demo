@@ -33,6 +33,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CategoryDto> findCategoryById(@PathVariable Integer id) {
         return categoryService.findCategoryById(id);
     }
@@ -51,6 +52,7 @@ public class CategoryController {
     }
 
     @GetMapping("/get-all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
         return categoryService.getAllCategories();
     }

@@ -28,13 +28,4 @@ public class ExceptionsHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> exception(Exception exception) throws Exception {
-        if (exception instanceof AccessDeniedException
-                || exception instanceof AuthenticationException) {
-            throw exception;
-        }
-        return ResponseEntity.ok("OO");
-    }
-
 }
